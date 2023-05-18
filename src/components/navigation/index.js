@@ -1,12 +1,16 @@
+import axios from 'axios';
 import React from 'react';
-import {Nav, Navbar, Container, Form, InputGroup} from 'react-bootstrap';
+import {Nav, Navbar, NavDropdown,
+  Container, Form, InputGroup} from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import {Link} from 'react-router-dom';
-import {LinkContainer} from 'react-router-bootstrap';
+//import {LinkContainer} from 'react-router-bootstrap';
 import logo from '../../assets/images/logo/penlagbe-logo.png';
 
 export default function NavigationHeader() {
   //States
   const [searchShow, setSearchShow] = React.useState(false);
+  
   //Function
   const handleSearch = () => {
     setSearchShow(!searchShow);
@@ -53,6 +57,18 @@ export default function NavigationHeader() {
 }
 
 function PrimaryNavbar({cid, header}) {
+  //States
+  const [categories, setCategories] = React.useState([]);
+
+  //Effects
+  React.useEffect(() => {
+    axios.get('https://fakestoreapi.com/products/categories').then(res => {
+      if(res.status) {
+        setCategories(res.data);
+      }
+    }).catch(err => console.log(err));
+  }, []);
+
   return (
     <Navbar id={cid} bg="white" expand="lg" 
       className={header ? 'header-border' : ''}>
@@ -63,9 +79,15 @@ function PrimaryNavbar({cid, header}) {
           className="justify-content-center" 
           id="nav-toggle">
           <Nav className="justify-content-center">
-            <LinkContainer to='/'>
-              <Nav.Link>Shop</Nav.Link>
-            </LinkContainer>
+            <NavDropdown title="Categories" id="categories-dropdown">
+              {categories.length>0 && categories.map((cat, i) => (
+                <LinkContainer key={i} to={`/categories/${cat}`}>
+                  <NavDropdown.Item>
+                    <span style={{textTransform: 'capitalize'}}>{cat}</span>
+                  </NavDropdown.Item>
+                </LinkContainer>
+              ))}
+            </NavDropdown>
             <Nav.Link href="#link">My Wishlist</Nav.Link>
             <Nav.Link href="#link">Compare</Nav.Link>
             <Nav.Link href="#link">My Account</Nav.Link>       

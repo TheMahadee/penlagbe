@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Home } from '../views';
-import { Header } from '../components';
+import { Home, Category, Product } from '../views';
+import { Header, Footer } from '../components';
 
 export default function RoutesCore() {
   return (
@@ -9,7 +9,10 @@ export default function RoutesCore() {
       <Header />
       <Routes>
         <Route path='/' element={<Home />} />
+        <Route path='/categories/:categoryName' element={<Category />} />
+        <Route path='/product/:productId' element={<Product />} />
       </Routes>
+      <Footer />
     </BrowserRouter>
   );
 }
